@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Agency Event - Emerald Green</title>
+
+<style>
+:root {
+    --rules-x: 53%; --rules-y: 39%; 
+    --timer-y: 57%; 
+    --music-top: 15px; --music-right: 15px;
+    --gift-x: 51%; --gift-y: 10%; --gift-size: 247px; 
+    --podium-y: 69%; 
+    --p1-x: 50%; --p2-x: 28%; --p3-x: 70%;
+    --p1-h: 84px; --p1-w: 108px; 
+    --p2-h: 65px; --p2-w: 75px; 
+    --p3-h: 50px; --p3-w: 57px; 
+    --podium-glow: rgba(0, 255, 136, 0.4);
+    --r1-x: var(--p1-x); --r1-y: calc(var(--podium-y) - 30px); 
+    --r2-x: var(--p2-x); --r2-y: calc(var(--podium-y) - 5px); 
+    --r3-x: var(--p3-x); --r3-y: calc(var(--podium-y) + 10px); 
+    --medal1-size: 68px; --medal2-size: 40px; --medal3-size: 30px;
+    --avatar-size: 46px;
+    --list-y: 79%; --list-width: 85%;
+    --premium-gold: #ffd700;
+    --list-border: #085012e8;
+}
+
+html, body { 
+    width: 100%; 
+    height: 100%; 
+    margin: 0; 
+    padding: 0; 
+    overflow: hidden; 
+    position: fixed; 
+    background: #001a0a; 
+    touch-action: none; 
+}
+
+body { 
+    background: radial-gradient(circle, #013115 0%, #000000 100%); 
+    display: flex; 
+    justify-content: center; 
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+}
+
+.wrapper { 
+    width: 100%; 
+    max-width: 420px; 
+    height: 100%; 
+    position: relative; 
+    overflow-y: auto; 
+    overflow-x: hidden;
+    scrollbar-width: none; 
+    background: #001a0a; 
+    box-shadow: 0 0 50px rgba(0,255,100,0.2);
+    -webkit-overflow-scrolling: touch; 
+    touch-action: pan-y; 
+}
+
+.wrapper::-webkit-scrollbar { display: none; }
+
+.event { 
+    position: relative; 
+    width: 100%; 
+    min-height: 100%;
+    height: 180vh; 
+    display: block;
+}
+
+.bg-container { position: absolute; top: 0; left: 0; width: 100%; z-index: 0; display: flex; flex-direction: column; pointer-events: none; }
+.bg-banner, .bg-bottom { width: 100%; height: auto; display: block; }
+
+.effects-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; overflow: hidden; }
+
+.leaf { position: absolute; top: -50px; width: 15px; height: 15px; background: #2e7d32; border-radius: 2px 10px; opacity: 0.8; animation: leafFall linear infinite; }
+@keyframes leafFall {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.8; }
+    100% { transform: translateY(180vh) translateX(50px) rotate(720deg); opacity: 0; }
+}
+
+.firefly { position: absolute; width: 4px; height: 4px; background: #ffff00; border-radius: 50%; box-shadow: 0 0 10px #ffff00, 0 0 20px #00ff00; animation: fireflyMove linear infinite alternate, fireflyBlink 1.5s infinite; }
+@keyframes fireflyMove {
+    from { transform: translate(0, 0); }
+    to { transform: translate(100px, -100px); }
+}
+@keyframes fireflyBlink { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+
+.music-control {
+    position: absolute; top: var(--music-top); right: var(--music-right); z-index: 1000; cursor:pointer;
+    width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; transition: 0.3s;
+}
+#music-icon { font-size: 22px; color: #fff; }
+.music-muted { background: rgba(255, 0, 0, 0.8) !important; }
+
+.gift-center-img {
+    position: absolute; top: var(--gift-y); left: var(--gift-x); transform: translateX(-50%); width: var(--gift-size); z-index: 5; transform-origin: center bottom; 
+    animation: smoothLegsFeather 3.5s ease-in-out infinite;
+}
+
+@keyframes smoothLegsFeather {
+    0%, 100% { transform: translateX(-50%) rotate(0deg) scale(1); }
+    25% { transform: translateX(-50%) rotate(-1.5deg) scale(1.02, 0.98); }
+    50% { transform: translateX(-50%) translateY(-8px) rotate(0deg) scale(0.98, 1.03); }
+    75% { transform: translateX(-50%) rotate(1.5deg) scale(1.02, 0.98); }
+}
+
+/* MERGED PREMIUM RULES (NO BOX) */
+.premium-rules { 
+    position: absolute; 
+    top: var(--rules-y); 
+    left: var(--rules-x); 
+    transform: translateX(-50%); 
+    width: 85%; 
+    text-align: center;
+    z-index: 10;
+}
+
+.rules-header { 
+    font-size: 19px; 
+    font-weight: 800; 
+    color: var(--premium-gold); 
+    text-transform: uppercase; 
+    letter-spacing: 4px;
+    margin-bottom: 15px;
+    display: block;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
+
+.rules-body { 
+    font-size: 13px; 
+    color: #ffffff; 
+    line-height: 1.8;
+    text-align: left;
+    display: inline-block;
+}
+
+.rule-line {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: flex-start;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+}
+
+.rule-line::before {
+    content: '★'; 
+    color: var(--premium-gold);
+    font-size: 11px;
+    margin-right: 10px;
+    margin-top: 2px;
+}
+
+.highlight-gold {
+    color: var(--premium-gold);
+    font-weight: bold;
+}
+
+.modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
+.modal-content { background: #002814; margin: 20% auto; padding: 20px; border: 1px solid var(--premium-gold); width: 80%; border-radius: 15px; text-align: center; }
+.modal-avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--premium-gold); margin-bottom: 10px; }
+
+.podium-base { position: absolute; z-index: 14; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(180deg, #0a4d21 0%, #001a0a 100%); border: 1.5px solid var(--list-border); border-radius: 10px 10px 4px 4px; transform: translateX(-50%); font-weight: 900; color: var(--premium-gold); }
+.p-rank1 { top: var(--podium-y); left: var(--p1-x); width: var(--p1-w); height: var(--p1-h); font-size: 22px; }
+.p-rank2 { top: calc(var(--podium-y) + 20px); left: var(--p2-x); width: var(--p2-w); height: var(--p2-h); font-size: 16px; }
+.p-rank3 { top: calc(var(--podium-y) + 35px); left: var(--p3-x); width: var(--p3-w); height: var(--p3-h); font-size: 14px; }
+
+.podium-gift { font-size: 10px; font-weight: bold; color: #fff; margin-top: 2px; }
+
+.profile { position: absolute; width: var(--avatar-size); height: var(--avatar-size); border-radius: 50%; z-index: 15; transform: translate(-50%, -50%); cursor: pointer; }
+.avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--premium-gold); }
+.medal-img { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); z-index: 16; }
+
+.rank1 { top: var(--r1-y); left: var(--r1-x); width: 58px; height: 58px; }
+.rank1 .medal-img { width: var(--medal1-size); }
+.rank2 { top: var(--r2-y); left: var(--r2-x); }
+.rank2 .medal-img { width: var(--medal2-size); }
+.rank3 { top: var(--r3-y); left: var(--r3-x); }
+.rank3 .medal-img { width: var(--medal3-size); }
+
+.list-container { position: absolute; top: var(--list-y); left: 50%; transform: translateX(-50%); width: var(--list-width); z-index: 12; }
+.rank-item { display: flex; align-items: center; width: 100%; padding: 10px 0; border-bottom: 1px solid rgba(0, 255, 136, 0.1); cursor: pointer; }
+.rank-num { font-size: 15px; font-weight: 800; width: 30px; }
+.list-avatar { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--premium-gold); margin: 0 12px; }
+.user-name { font-size: 14px; font-weight: bold; flex-grow: 1; }
+.gift-count { color: var(--premium-gold); font-weight: bold; font-size: 14px; }
+
+.timer-box { position: absolute; top: var(--timer-y); left: 50%; transform: translateX(-50%); display: flex; gap: 8px; }
+.time-unit { background: rgba(0, 30, 15, 0.8); border: 1px solid var(--list-border); padding: 5px 10px; border-radius: 8px; text-align: center; min-width: 48px; }
+.time-num { font-size: 18px; font-weight: bold; color: var(--premium-gold); display: block; }
+.time-label { font-size: 8px; text-transform: uppercase; }
+
+.join-btn { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 12px 45px; background: linear-gradient(45deg, #00ff88, #009955); border-radius: 30px; color: black; font-weight: bold; z-index: 1000; text-decoration: none; box-shadow: 0 4px 15px rgba(0,255,136,0.3); }
+</style>
+</head>
+
+<body>
+<div id="profileModal" class="modal">
+    <div class="modal-content">
+        <img id="modalImg" class="modal-avatar" src="">
+        <h2 id="modalName" style="color:var(--premium-gold); margin: 5px 0;"></h2>
+        <p id="modalID" style="font-size: 12px; color: #aaa;"></p>
+        <p id="modalGifts" style="font-weight: bold; margin-top: 10px;"></p>
+        <button onclick="closeModal()" style="background:var(--premium-gold); border:none; padding: 8px 20px; border-radius: 5px; margin-top: 15px; font-weight:bold; cursor:pointer;">Close</button>
+    </div>
+</div>
+
+<div class="wrapper">
+    <div class="effects-layer" id="effects"></div>
+
+    <div class="music-control" onclick="toggleMusic()">
+        <span id="music-icon">🎵</span>
+    </div>
+    <audio id="bgAudio" loop autoplay><source src="chill.mp3" type="audio/mpeg"></audio>
+
+    <div class="event">
+        <div class="bg-container">
+            <img src="angel.png" class="bg-banner">
+            <img src="bottom.png" class="bg-bottom">
+        </div>
+
+        <img src="gift.png" class="gift-center-img">
+
+        <div id="podium-p1" class="podium-base p-rank1"></div>
+        <div id="podium-p2" class="podium-base p-rank2"></div>
+        <div id="podium-p3" class="podium-base p-rank3"></div>
+
+        <div id="top-podium"></div>
+
+        <div class="premium-rules">
+            <span class="rules-header">Game Rules</span>
+            <div class="rules-body">
+                <div class="rule-line" style="margin-bottom: 12px; font-weight: bold; color: var(--premium-gold);">Only Angel gift count.</div>
+                <div class="rule-line">Top 1 - <span class="highlight-gold">3% charms</span> of total angel gift.</div>
+                <div class="rule-line">Top 2 - <span class="highlight-gold">2% charms</span> of total angel gift.</div>
+                <div class="rule-line">Top 3 - <span class="highlight-gold">1% charms</span> of total angel gift.</div>
+            </div>
+        </div>
+
+        <div class="timer-box" id="timer">
+            <div class="time-unit"><span class="time-num" id="days">00</span><span class="time-label">Days</span></div>
+            <div class="time-unit"><span class="time-num" id="hours">00</span><span class="time-label">Hrs</span></div>
+            <div class="time-unit"><span class="time-num" id="mins" style="color: white;">00</span><span class="time-label">Min</span></div>
+            <div class="time-unit"><span class="time-num" id="secs" style="color: #00ff88;">00</span><span class="time-label">Sec</span></div>
+        </div>
+
+        <div class="list-container">
+            <div class="rank-list" id="rank-list-items"></div>
+        </div>
+    </div>
+</div>
+
+<a href="intent://recharge#Intent;scheme=ikchat;package=com.ikchat.app;end" class="join-btn">🚀 JOIN & PURCHASE</a>
+
+<script>
+    function createEffects() {
+        const layer = document.getElementById('effects');
+        for(let i=0; i<15; i++) {
+            let leaf = document.createElement('div');
+            leaf.className = 'leaf';
+            leaf.style.left = Math.random() * 100 + '%';
+            leaf.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            leaf.style.animationDelay = Math.random() * 5 + 's';
+            layer.appendChild(leaf);
+        }
+        for(let i=0; i<10; i++) {
+            let fly = document.createElement('div');
+            fly.className = 'firefly';
+            fly.style.left = Math.random() * 100 + '%';
+            fly.style.top = Math.random() * 100 + '%';
+            fly.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            layer.appendChild(fly);
+        }
+    }
+    createEffects();
+
+    const users = [
+        { name: "QUEEN_B", gifts: 2500, id: "IK_1122", img: "https://i.pravatar.cc/100?img=10" },
+        { name: "LION_HEART", gifts: 1800, id: "IK_7711", img: "https://i.pravatar.cc/100?img=11" },
+        { name: "SULTAN_IK", gifts: 1500, id: "IK_9921", img: "https://i.pravatar.cc/100?img=1" },
+        { name: "ALPHA_DON", gifts: 1200, id: "IK_8832", img: "https://i.pravatar.cc/100?img=2" },
+        { name: "iK_USER6", gifts: 800, id: "IK_4455", img: "https://i.pravatar.cc/100?img=3" },
+        { name: "iK_USER9", gifts: 600, id: "IK_1212", img: "https://i.pravatar.cc/100?img=6" },
+        { name: "iK_USER10", gifts: 450, id: "IK_3434", img: "https://i.pravatar.cc/100?img=12" },
+        { name: "GHOST_RIDER", gifts: 300, id: "IK_4567", img: "https://i.pravatar.cc/100?img=13" },
+        { name: "DANGER_BOY", gifts: 200, id: "IK_8901", img: "https://i.pravatar.cc/100?img=14" },
+        { name: "SHER_NI", gifts: 100, id: "IK_2345", img: "https://i.pravatar.cc/100?img=15" }
+    ];
+
+    function renderRankings() {
+        users.sort((a, b) => b.gifts - a.gifts);
+        const podiumAvatars = document.getElementById('top-podium');
+        const list = document.getElementById('rank-list-items');
+        document.getElementById('podium-p1').innerHTML = `1st <span class="podium-gift">${users[0].gifts}</span>`;
+        document.getElementById('podium-p2').innerHTML = `2nd <span class="podium-gift">${users[1].gifts}</span>`;
+        document.getElementById('podium-p3').innerHTML = `3rd <span class="podium-gift">${users[2].gifts}</span>`;
+        podiumAvatars.innerHTML = `
+            <div class="profile rank1" onclick="showProfile(0)"><img class="avatar-img" src="${users[0].img}"><img src="g.png" class="medal-img"></div>
+            <div class="profile rank2" onclick="showProfile(1)"><img class="avatar-img" src="${users[1].img}"><img src="s.png" class="medal-img"></div>
+            <div class="profile rank3" onclick="showProfile(2)"><img class="avatar-img" src="${users[2].img}"><img src="b.png" class="medal-img"></div>
+        `;
+        list.innerHTML = "";
+        users.slice(3, 10).forEach((user, index) => {
+            list.innerHTML += `
+                <div class="rank-item" onclick="openProfile('${user.name}', '${user.id}', ${user.gifts}, '${user.img}')">
+                    <span class="rank-num">${index + 4}</span>
+                    <img class="list-avatar" src="${user.img}">
+                    <span class="user-name">${user.name}</span>
+                    <span class="gift-count">${user.gifts} Angel</span>
+                </div>
+            `;
+        });
+    }
+
+    function showProfile(index) {
+        const u = users[index];
+        openProfile(u.name, u.id, u.gifts, u.img);
+    }
+
+    function openProfile(name, id, gifts, img) {
+        document.getElementById('modalImg').src = img;
+        document.getElementById('modalName').innerText = name;
+        document.getElementById('modalID').innerText = "ID: " + id;
+        document.getElementById('modalGifts').innerText = "Total Angel Gifts: " + gifts;
+        document.getElementById('profileModal').style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById('profileModal').style.display = "none";
+    }
+
+    let targetDate = new Date().getTime() + (7 * 24 * 60 * 60 * 1000); 
+    function updateCountdown() {
+        let now = new Date().getTime();
+        let diff = targetDate - now;
+        if(diff <= 0) { clearInterval(timerInt); return; }
+        let d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        let s = Math.floor((diff % (1000 * 60)) / 1000);
+        document.getElementById("days").innerText = String(d).padStart(2,'0');
+        document.getElementById("hours").innerText = String(h).padStart(2,'0');
+        document.getElementById("mins").innerText = String(m).padStart(2,'0');
+        document.getElementById("secs").innerText = String(s).padStart(2,'0');
+    }
+
+    const timerInt = setInterval(updateCountdown, 1000);
+    renderRankings();
+
+    const audio = document.getElementById("bgAudio");
+    const mControl = document.querySelector(".music-control");
+
+    function toggleMusic() {
+        if (audio.paused) { 
+            audio.play(); 
+            mControl.classList.remove("music-muted"); 
+        } 
+        else { 
+            audio.pause(); 
+            audio.currentTime = 0; // Turant off karne ke liye
+            mControl.classList.add("music-muted"); 
+        }
+    }
+
+    window.addEventListener('click', () => {
+        if (audio.paused && !mControl.classList.contains("music-muted")) { 
+            audio.play().catch(e => console.log("Auto-play blocked")); 
+        }
+    }, { once: true });
+</script>
+</body>
+</html>
